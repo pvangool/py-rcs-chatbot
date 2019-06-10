@@ -65,7 +65,7 @@ class Suggestions:
 
     self.suggestions.append(suggestion)
 
-  def addDialerAction(self, displayText, postbackData, dialType, phoneNumber, fallbackUrl, subject):
+  def addDialerAction(self, displayText, postbackData, dialType, phoneNumber, fallbackUrl, subject = None):
     suggestion = {
       "action": {
         "dialerAction": {},
@@ -305,7 +305,7 @@ class Chatbot:
     else:
       self.logger.debug("No event handler register for event type: {}".format(eventType))
 
-  def sendMessage(self, messageContact, text, suggestions):
+  def sendMessage(self, messageContact, text, suggestions = None):
     headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer " +  self.accessToken
