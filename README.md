@@ -14,9 +14,9 @@ See more examples in [the example folder](https://github.com/pvangool/py-rcs-cha
 
 ```python
 import flask
-import maap
+import rcs_chatbot
 
-chatbot = maap.Chatbot(
+chatbot = rcs_chatbot.Chatbot(
   "API_URL",
   "BOT_ID",
   "TOKEN"
@@ -32,11 +32,11 @@ def event():
   except:
     pass
 
-@chatbot.registerEventHandler(maap.EventType.MESSAGE)
+@chatbot.registerEventHandler(rcs_chatbot.EventType.MESSAGE)
 def messageHandler(event):
-  contact = maap.MessageContact("+18055551234", None)
+  contact = rcs_chatbot.MessageContact("+18055551234", None)
 
-  suggestions = maap.Suggestions()
+  suggestions = rcs_chatbot.Suggestions()
   suggestions.addReply("reply", "reply")
   suggestions.addUrlAction("url", "url", "http://example.com")
 
