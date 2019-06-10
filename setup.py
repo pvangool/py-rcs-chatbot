@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rcs_chatbot",
-    version="0.0.1",
+    version="0.0.2",
     author="Paul van Gool",
     author_email="pvangool@gmail.com",
     description="Python SDK for RCS MaaP chatbot",
