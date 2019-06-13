@@ -3,6 +3,22 @@ import logging
 import requests
 from enum import Enum
 
+class MainException(Exception):
+  pass
+
+class RequestFailed(MainException):
+  def __init__(self, response_dict):
+    if 'reason' not in response_dict:
+      return
+
+    self.message = response_dict['reason'].get('text', '')
+
+  def __str__(self):
+    return self.message
+
+  def __unicode__(self):
+    return self.__str__()
+
 class CardOrientation(Enum):
   VERTICAL = "VERTICAL"
   HORIZONTAL = "HORIZONTAL"
@@ -504,7 +520,7 @@ class Chatbot:
     return decorator
 
   def processEvent(self, body):
-    self.logger.debug(body)
+    self.logger.debug("processEvent: {}".format(body))
 
     if body is None:
       self.logger.warn("Empty POST body")
@@ -569,11 +585,19 @@ class Chatbot:
         "suggestions": suggestions.generate()
       }
 
+    self.logger.debug("sendMessage request: {}".format(message))
+
     r = requests.post(self.apiUrl + "/" + self.botId + "/messages",
         headers=headers, data=json.dumps(message))
 
-    if r.status_code != 202:
-        raise("Unexpected status code")
+    response_dict = r.json()
+
+    self.logger.debug("sendMessage response: {}".format(response_dict))
+
+    if r.status_code >= 300:
+      raise RequestFailed(response_dict)
+
+    return response_dict
 
   def startTyping(self, messageContact):
     return

@@ -14,12 +14,15 @@ See more examples in [the example folder](https://github.com/pvangool/py-rcs-cha
 
 ```python
 import flask
+import logging
 import rcs_chatbot
 
 chatbot = rcs_chatbot.Chatbot(
   "API_URL",
   "BOT_ID",
-  "TOKEN"
+  "TOKEN",
+  None,
+  logging.DEBUG
 )
 
 app = flask.Flask(__name__)
@@ -29,8 +32,9 @@ def event():
   try:
     chatbot.processEvent(flask.request.get_json())
     return "ok", 200
-  except:
-    pass
+  except maap.RequestFailed as ex:
+    print("Request failed: " + str(ex))
+    return "ok", 200
 
 @chatbot.registerEventHandler(rcs_chatbot.EventType.MESSAGE)
 def messageHandler(event):
@@ -157,13 +161,13 @@ Uploads a file of type `fileType` to the MaaP content storage until it expires a
 * `fileType` - String: The file's content type.
 * `until` - Date: The date at which time the content should be expired.
 
-#### deleteFile(fileId, [cb])
+#### deleteFile(fileId)
 
 Deletes a file with identifier `fileId` from the MaaP content storage.
 
 * `fileId` - String: The file identifier.
 
-#### getFile(fileId, [cb])
+#### getFile(fileId)
 
 Gets info for a file with identifier `fileId` from the MaaP content storage.
 
@@ -175,7 +179,7 @@ Starts the 'is typing' indicator for the target `recipient`.
 
 * `recipient` - Object: A `MessageContact` object.
 
-#### stopTyping(recipient, [cb])
+#### stopTyping(recipient)
 
 Stops the 'is typing' indicator for the target `recipient`.
 

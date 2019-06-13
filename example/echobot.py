@@ -1,10 +1,13 @@
 import flask
+import logging
 import rcs_chatbot
 
 chatbot = rcs_chatbot.Chatbot(
   "API_URL",
   "BOT_ID",
-  "TOKEN"
+  "TOKEN",
+  None,
+  logging.DEBUG
 )
 
 app = flask.Flask(__name__)
@@ -14,8 +17,9 @@ def event():
   try:
     chatbot.processEvent(flask.request.get_json())
     return "ok", 200
-  except:
-    pass
+  except maap.RequestFailed as ex:
+    print("Request failed: " + str(ex))
+    return "ok", 200
 
 @chatbot.registerEventHandler(rcs_chatbot.EventType.MESSAGE)
 def messageHandler(event):
